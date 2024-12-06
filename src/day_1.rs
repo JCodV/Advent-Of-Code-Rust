@@ -12,26 +12,13 @@ pub fn run_day1(path: &str) {
 
         left_list.push(left_num);
         right_list.push(right_num);
-        //println!("{}", line);
     }
 
-    for left in left_list.iter() {
-        //println!("{}", left);
-    }
+    sel_sort(&mut left_list);
+    sel_sort(&mut right_list);
 
-    sort(&mut left_list);
-}
-
-pub fn sort(list: &mut Vec<i32>) {
-    // selection sort vec not too large
-    let curr: i32 = 0;
-    let min: i32 = 0;
-
-    for (i, value) in list.iter().enumerate() {
-        for (j, value_j) in list[i + 1..].iter().enumerate() {
-            println!("i:{}, j:{}", i, j);
-        }
-    }
+    let dist = calc_distance(&mut left_list, &mut right_list);
+    println!("{}", dist);
 }
 
 pub fn read_lines(filename: &str) -> Vec<String> {
@@ -40,4 +27,34 @@ pub fn read_lines(filename: &str) -> Vec<String> {
         .lines() // split the string into an iterator of string slices
         .map(String::from) // make each slice into a string
         .collect() // gather them together into a vector
+}
+
+pub fn sel_sort(list: &mut Vec<i32>) {
+    for i in 0..list.len() {
+        let mut min_idx = i;
+        for j in i + 1..list.len() {
+            if list[j] < list[min_idx] {
+                min_idx = j;
+            }
+        }
+
+        if i != min_idx {
+            list.swap(i, min_idx);
+        }
+    }
+}
+
+pub fn calc_distance(left_list: &mut Vec<i32>, right_list: &mut Vec<i32>) -> i32 {
+    let len = if left_list.len() == right_list.len() {
+        left_list.len()
+    } else {
+        panic!("left and right list arent the same length!");
+    };
+
+    let mut dist: i32 = 0;
+    for i in 0..len {
+        dist = dist + (left_list[i] - right_list[i]).abs();
+    }
+
+    dist
 }
